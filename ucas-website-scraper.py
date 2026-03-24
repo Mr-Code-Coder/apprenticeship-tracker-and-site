@@ -1,0 +1,52 @@
+from bs4 import BeautifulSoup
+import requests
+
+# This snippet of HTML is how each apprenticeship is diplayed on the website
+example = """
+<article data-v-f5e192ae="" data-v-56121e7b="" class="card elevation-low link-container" tidy-header="false" link-container="false" use-lazy-load="true">
+    <!---->
+    <header data-v-f5e192ae="" class="card__section card__content"><h2 data-v-f5e192ae="">
+        <a data-v-f5e192ae="" href="link_here" class="link-container__link">Degree Apprenticeship - BSc Digital Technology</a></h2>
+        </header>
+    <section data-v-f5e192ae="" class="card__section">
+        <div data-v-dd39ebba="" data-v-56121e7b="" class="apprenticeship-display">
+            <p data-v-dd39ebba="" class="apprenticeship-display__employer">EMPOLYER </p>
+            <p data-v-dd39ebba="" class="apprenticeship-display__location icon icon--info-location">London</p>
+            <dl data-v-dd39ebba="" class="grid grid--columns-1 grid--columns-2-from-small">
+                <div data-v-dd39ebba="">
+                    <dt data-v-dd39ebba="">Apprenticeship level</dt>
+                    <dd data-v-dd39ebba="">England - Degree Apprenticeship - Level 6</dd>
+                </div>
+                <div data-v-dd39ebba="">
+                    <dt data-v-dd39ebba="">Salary</dt>
+                    <dd data-v-dd39ebba="">27,000 a year</dd>
+                </div>
+                <div data-v-dd39ebba="">
+                    <dt data-v-dd39ebba="">Industry</dt>
+                    <dd data-v-dd39ebba="">Digital and IT</dd>
+                </div><div data-v-dd39ebba="">
+                    <dt data-v-dd39ebba="">Apply by | Start date</dt>
+                    <dd data-v-dd39ebba="">xx/xx/2026 | xx/xx/xxxx</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+    <!---->
+</article>"""
+
+url = "https://www.ucas.com/explore/search/apprenticeships?query=&refinementList%5BLevel.ApprenticeshipType%5D%5B0%5D=Degree%20Apprenticeship&refinementList%5BIndustry%5D%5B0%5D=Digital%20and%20IT"
+response = requests.get(url)
+
+print(response.status_code)
+
+soup = BeautifulSoup(response.text, 'html.parser')
+articles = soup.find_all("article", class_="card elevation-low link-container")
+
+for article in articles:
+    title = article.header.a.text
+    link = article.header.a['href']
+    employer = article.find("p", class_="apprenticeship-display__employer").text
+    location = article.find("p", class_="apprenticeship-display__location").text
+    
+    
+    print(f"{title} -- \033[0;32m{link} -- \033[0;34m{employer} -- \033[1;35m{location}\033[0m")
