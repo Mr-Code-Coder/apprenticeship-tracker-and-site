@@ -48,5 +48,12 @@ for article in articles:
     employer = article.find("p", class_="apprenticeship-display__employer").text
     location = article.find("p", class_="apprenticeship-display__location").text
     
-    
+    # 1. Find the <dt> tag that contains the word "Salary"
+    salary_label = soup.find('dt', string=lambda t: t and 'Salary' in t)
+    if salary_label:
+        salary_value = salary_label.find_next_sibling('dd').get_text()
+        print(salary_value)
+
+        # Issue where all the salaries output "Competitive plus benefits" even when there is a salary. Likely inputed to HTML by Javascript so can't access
+
     print(f"{title} -- \033[0;32m{link} -- \033[0;34m{employer} -- \033[1;35m{location}\033[0m")
