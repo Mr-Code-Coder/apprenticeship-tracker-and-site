@@ -1,20 +1,17 @@
 from bs4 import BeautifulSoup
 import requests
 
-soup = BeautifulSoup(
-    """<html>
-    
-    <b class="boldest" id="this is an id">Extremely bold</b>
-    
-    </html>""", 'html.parser')
+url = "https://books.toscrape.com"
+response = requests.get(url)
 
-tag = soup.b
+print(response.status_code) # 200 means can get in whereas 403 means you can't
 
-print(type(tag))
-print(tag.name)
-print(tag['id'])
+soup = BeautifulSoup(response.text, 'html.parser')
+books = soup.find_all("article", class_="product_pod") # finds all <article> tags with the class "product_pod"
 
-
+for book in books: # loops through all books displayed and gets the title and price
+    title = book.h3.a["title"] # <h3> <a title="..."> </h3> this sets to title down to what shows the title
+    price = book.find("p", class_="price_color").text
+    print(f"{title} -- {price}")
 
 
-#https://www.findapprenticeship.service.gov.uk/apprenticeships?sort=AgeAsc&searchTerm=&location=&distance=all&levelIds=6&levelIds=7&routeIds=7
