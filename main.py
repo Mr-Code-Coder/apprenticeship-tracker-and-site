@@ -2,8 +2,17 @@ from fastapi import FastAPI, Depends
 from sqlmodel import Session, select
 from typing import List
 from database import engine, Entry
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Apprenticeship API")
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # Allow all websites (fine for a local project)
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 @app.get('/')
 def root():
