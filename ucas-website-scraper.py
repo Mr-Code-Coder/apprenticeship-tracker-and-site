@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
 from database import engine, Entry, create_db_and_tables, Session
-
+from sqlmodel import select
 ## Handle scraping
 
 # This snippet of HTML is how each apprenticeship is diplayed on the website
@@ -60,13 +60,33 @@ for article in articles:
     if apply_start_label:
         apply_value, start_value = apply_start_label.find_next_sibling('dd').get_text().split(" | ")
         #print(f"{apply_value} -- {start_value}")
+        clean_apply_value = datetime.strptime(apply_value, date_format).date()
+        clean_start_value = datetime.strptime(start_value, date_format).date()
+
 
     
     # Add to database
-    new_entry = Entry(title=title, link=link, employer=employer, location=location, apply_date=datetime.strptime(apply_value, date_format).date(), start_date=datetime.strptime(start_value, date_format).date())
-
+    
     with Session(engine) as session:
-        session.add(new_entry)
+        # Look to see if it already exists using an Upsert pattern
+        statement = select(Entry).where(Entry.link == link) # The link is unlikely to change so check if it exists using it.
+        existing_entry = session.exec(statement).first()
+
+        if existing_entry:
+            # Update
+            existing_entry.title = title
+            existing_entry.apply_date = clean_apply_value
+            existing_entry.start_date = clean_start_value
+
+            print(f"Updating: {title}")
+        
+        else:
+            # Its new so add it
+            new_entry = Entry(title=title, link=link, employer=employer, location=location, 
+                              apply_date=clean_apply_value, start_date=clean_start_value)
+
+            session.add(new_entry)
+            print(f"Adding {title}")
         session.commit()
 
     #print(f"{title} -- \033[0;32m{link} -- \033[0;34m{employer} -- \033[1;35m{location}\033[0m -- {apply_value} -- {start_value}")
