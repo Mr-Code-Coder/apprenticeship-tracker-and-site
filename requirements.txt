@@ -1,0 +1,3 @@
+sqlmodel
+beautifulsoup4
+requests

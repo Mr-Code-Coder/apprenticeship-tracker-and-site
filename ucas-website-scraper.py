@@ -1,5 +1,9 @@
 from bs4 import BeautifulSoup
 import requests
+from datetime import datetime
+from database import engine, Entry, create_db_and_tables, Session
+
+## Handle scraping
 
 # This snippet of HTML is how each apprenticeship is diplayed on the website
 example = """
@@ -42,6 +46,9 @@ print(response.status_code)
 soup = BeautifulSoup(response.text, 'html.parser')
 articles = soup.find_all("article", class_="card elevation-low link-container")
 
+date_format = '%d/%m/%Y'
+create_db_and_tables()
+
 for article in articles:
     title = article.header.a.text
     link = article.header.a['href']
@@ -49,10 +56,17 @@ for article in articles:
     location = article.find("p", class_="apprenticeship-display__location").text
     
     # 1. Find the <dt> tag that contains the word "Apply by | Start date"
-    apply_start_label = soup.find('dt', string=lambda t: t and 'Apply by | Start date' in t)
+    apply_start_label = article.find('dt', string=lambda t: t and 'Apply by | Start date' in t) # error on this line where it was soup. so all the dates were the same
     if apply_start_label:
-        apply_value, start_value = apply_start_label.find_next_sibling('dd').get_text().split("|")
-        print(f"{apply_value} -- {start_value}")
+        apply_value, start_value = apply_start_label.find_next_sibling('dd').get_text().split(" | ")
+        #print(f"{apply_value} -- {start_value}")
 
-        
-    print(f"{title} -- \033[0;32m{link} -- \033[0;34m{employer} -- \033[1;35m{location}\033[0m")
+    
+    # Add to database
+    new_entry = Entry(title=title, link=link, employer=employer, location=location, apply_date=datetime.strptime(apply_value, date_format).date(), start_date=datetime.strptime(start_value, date_format).date())
+
+    with Session(engine) as session:
+        session.add(new_entry)
+        session.commit()
+
+    #print(f"{title} -- \033[0;32m{link} -- \033[0;34m{employer} -- \033[1;35m{location}\033[0m -- {apply_value} -- {start_value}")
