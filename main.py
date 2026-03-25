@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Apprenticeship API")
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], # Allow all websites (fine for a local project)
