@@ -1,7 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlmodel import Session, select
+from typing import List
+from database import engine, Entry
 
-app = FastAPI()
+app = FastAPI(title="Apprenticeship API")
 
 @app.get('/')
 def root():
-    return {"Hello" : "World"}
+    return {"message" : "The API is live"}
+
+# Gets the session safely by using "with"
+def get_session():
+    with Session(engine) as session:
+        yield session
+
+@app.get("/jobs", response_model=List[Entry]) # response_model means when using react I can know what to expect as the data output
+def get_all_jobs(session: Session = Depends(get_session)): # safely open a session
+    statement = select(Entry).order_by(Entry.apply_date)
+    results = session.exec(statement).all()
+    return results
