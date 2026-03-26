@@ -1,10 +1,17 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
 import './App.css'
+import axios from 'axios'
 
 function App() {
   const [count, setCount] = useState(0)  // allows changing the state of count
   const [colour, setColour] = useState("red")
+  const [jobs, setJobs] = useState([])
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/jobs')
+    .then(response => setJobs(response.data));
+  }, [])
 
   useEffect(() => {  // use effect triggers every render by default
     let timer = setTimeout(() => {
@@ -21,7 +28,13 @@ function App() {
     <>
       <h1>Hello world</h1>
 
-      
+      <div style={{display: 'grid', gap: '20px'}}>
+        {jobs.map((job) => (
+          <h1>{job.title}</h1>
+        ))}
+      </div>
+
+
       <button
         className="counter"
         onClick={() => setCount((count) => count + 1)}
