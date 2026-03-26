@@ -33,34 +33,16 @@ function App() {
 
   return ( // what html should fill the container
     <>
-      <h1>Hello world</h1>
+      <h1>Apprenticeship Tracking Site</h1>
 
       <div style={{display: 'grid', gap: '20px'}}>
         {jobs.map((job) => (
-          <h1>{job.title}</h1>
+          <div>
+            <p>{job.title}</p>
+            <p>{job.apply_date}</p>
+          </div>
         ))}
       </div>
-
-
-      <button
-        className="counter"
-        onClick={() => setCount((count) => count + 1)}
-      >
-        Count is {count}
-      </button>
-
-      <p>My Favourite colour is {colour}</p>
-
-      <button onClick={() => setColour((colour) => "blue")}>
-        Blue
-      </button>
-      <button onClick={() => setColour((colour) => "red")}>
-        Red
-      </button>
-      <button onClick={() => setColour((colour) => "purple")}>
-        Purple
-      </button>
-
     </>
   )
 }
