@@ -9,7 +9,7 @@ function App() {
   const [jobs, setJobs] = useState([])
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/jobs')
+    axios.get('https://apprenticeship-backend.onrender.com/jobs')
     .then(response => setJobs(response.data))
     .catch(error => 
       {console.log("Backend not detected, loading demo data...");
