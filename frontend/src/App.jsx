@@ -29,7 +29,7 @@ function App() {
             <h5>{job.employer}</h5>
             <p>Apply date | Start Date</p>
             <p>{job.apply_date} | {job.start_date}</p>
-            <a href='{job.link}'>Visit Vacancy</a>
+            <a href={job.link} target='_blank'>Visit Vacancy</a>
 
           </div>
         ))}
