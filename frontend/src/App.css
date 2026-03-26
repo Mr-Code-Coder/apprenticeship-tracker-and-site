@@ -1,3 +1,8 @@
+.display_block {
+  border: solid 1px black;
+  margin: auto;
+  padding: 1%;
+}
 
 .hero {
   position: relative;
