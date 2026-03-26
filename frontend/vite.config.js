@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/apprenticeship-tracker-and-site/', // so it knows where to go
+  base: '/apprenticeship-tracker-and-site/', // so it knows where to go // this fixed it
 })
