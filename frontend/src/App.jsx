@@ -10,7 +10,14 @@ function App() {
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/jobs')
-    .then(response => setJobs(response.data));
+    .then(response => setJobs(response.data))
+    .catch(error => 
+      {console.log("Backend not detected, loading demo data...");
+      setJobs([
+        { id: 1, title: "Software Engineer Apprentice (Demo)", employer: "Google", location: "London", apply_date: "2026-12-01" },
+        { id: 2, title: "Data Analyst Apprentice (Demo)", employer: "Sky", location: "Osterley", apply_date: "2026-11-15" }
+      ]);
+    });
   }, [])
 
   useEffect(() => {  // use effect triggers every render by default
