@@ -4,6 +4,16 @@
   padding: 1%;
 }
 
+.spinner {
+  animation: spin 2s linear infinite;
+  color: #2563eb;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .hero {
   position: relative;
 

@@ -4,19 +4,32 @@ import './App.css'
 import axios from 'axios'
 
 function App() {
-  const [jobs, setJobs] = useState([])
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get('https://apprenticeship-backend.onrender.com/jobs') // query api
-    .then(response => setJobs(response.data)) // then set jobs accordingly
+    .then(response => {
+      setJobs(response.data);
+      setLoading(false);}) // then set jobs accordingly
     .catch(error => // if api is not running fill with temp data
       {console.log("Backend not detected, loading demo data...");
       setJobs([
         { id: 1, title: "Software Engineer Apprentice (Demo)", employer: "Google", location: "London", apply_date: "2026-12-01" },
         { id: 2, title: "Data Analyst Apprentice (Demo)", employer: "Sky", location: "Osterley", apply_date: "2026-11-15" }
       ]);
+      setLoading(false);
     });
   }, [])
+
+  if (loading){
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <h2>Loading webpage...</h2>
+        <h2>Can take up to 30 seconds...</h2>
+      </div>
+    )
+  }
 
   return ( // what html should fill the container
     <>
