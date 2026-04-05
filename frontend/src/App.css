@@ -11,3 +11,9 @@
   border-image-slice: 1;
   border-image-source: linear-gradient(to bottom right, purple, blue);
 }
+.vacancy_button {
+  background-color: darkslategrey;
+  color: aliceblue;
+  padding: 0.5em;
+  text-decoration: none;
+}
