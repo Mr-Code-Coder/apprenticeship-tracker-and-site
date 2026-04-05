@@ -14,7 +14,18 @@ function App() {
       job.employer.toLowerCase().includes(searchLower) ||
       job.title.toLowerCase().includes(searchLower)
     );
-});
+  });
+
+  const handleOnMouseMoveOverCard = (e) => {
+    const { currentTarget: target } = e;
+
+    const rect = target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    target.style.setProperty("--mouse-x", `${x}px`);
+    target.style.setProperty("--mouse-y", `${y}px`);
+  }
 
   useEffect(() => {
     axios.get('https://apprenticeship-backend.onrender.com/jobs') // query api
@@ -33,40 +44,43 @@ function App() {
 
   return ( // what html should fill the container
     <>
-      <h1>Apprenticeship Tracking Site</h1>
-      
-      <div style={{display: 'grid', gridTemplateColumns: '4fr 1fr'}}>
-      
-        <div style={{ marginBottom: '30px', textAlign: 'center' }}>
-        <input
-          type="text"
-          placeholder="Search by company or role..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            padding: '12px 20px',
-            fontSize: '16px',
-            width: '85%',
-            borderRadius: '10px',
-            border: '2px solid #2563eb',
-            outline: 'none',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-          }}
-        />
-        <p style={{ marginTop: '10px', color: '#666' }}>
-          Showing {filteredJobs.length} of {jobs.length} opportunities
-        </p>
+      <header>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '1em 1em'}}>
+          <h3 style={{flexGrow: '1'}}>Apprenticeship Tracking Site</h3>
+
+          <div style={{ textAlign: 'center', flexGrow: '6' }}>
+          <input
+            type="text"
+            placeholder="Search by company or role..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              padding: '12px 20px',
+              fontSize: '16px',
+              width: '85%',
+              borderRadius: '10px',
+              border: '2px solid #2563eb',
+              outline: 'none',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+            }}
+          />
+          </div>
+
+          <button style={{height: '2.5em', flexGrow: '2'}} onClick={() => {
+              setLoading(true)
+              axios.get('https://apprenticeship-backend.onrender.com/scrape')
+              .then(response => {
+                setJobs(response.data)
+                setLoading(false)
+            })}}>Scrape Websites</button>
+
         </div>
+      
+      <p style={{ marginTop: '10px', color: '#666'}}>
+            Showing {filteredJobs.length} of {jobs.length} opportunities
+          </p>
 
-        <button style={{height: '2.5em'}} onClick={() => {
-            setLoading(true)
-            axios.get('https://apprenticeship-backend.onrender.com/scrape')
-            .then(response => {
-              setJobs(response.data)
-              setLoading(false)
-          })}}>Scrape Websites</button>
-
-      </div>
+      </header>
 
       {loading ? (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -74,9 +88,9 @@ function App() {
         <h2>Can take up to 30 seconds...</h2>
       </div>
       ) : (
-      <div className='list'>
+      <div id='list'>
         {filteredJobs.map((job) => ( // for each job create this div element filled with its values
-          <div className='display_block'>
+          <div key={job.id} className='card' onMouseMove={handleOnMouseMoveOverCard}>
             <h4>{job.title}</h4>
             <h5>{job.employer}</h5>
             <p>Apply date | Start Date</p>

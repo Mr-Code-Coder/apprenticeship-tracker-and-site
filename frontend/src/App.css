@@ -1,16 +1,53 @@
-.list {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+body {
+  background-color: rgb(20, 20, 20);
 }
 
-.list div {
-  padding: 1em;
-  margin: 1em;
-  border: 2px solid;
-  border-radius: 3;
-  border-image-slice: 1;
-  border-image-source: linear-gradient(to bottom right, purple, blue);
+header {
+  background-color: rgb(15, 15, 15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
+
+
+#list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: var(--width);
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  padding: 1em;
+  margin: 0.5em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  position: relative;
+  /*border-radius: 10px;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to bottom right, purple, blue); No longer using gradient border*/ 
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card::before {
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.06), transparent 40%
+  );
+  content: "";
+  border-radius: inherit;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0px;
+  top: 0px;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 500ms;
+  pointer-events: none;
+}
+
 .vacancy_button {
   background-color: darkslategrey;
   color: aliceblue;
