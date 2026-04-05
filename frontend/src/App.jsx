@@ -22,25 +22,24 @@ function App() {
     });
   }, [])
 
-  if (loading){
-    return (
+  return ( // what html should fill the container
+    <>
+      <h1>Apprenticeship Tracking Site</h1>
+      <button onClick={() => {
+        setLoading(true)
+        axios.get('https://apprenticeship-backend.onrender.com/scrape')
+        .then(response => {
+          setJobs(response.data)
+          setLoading(false)
+      })}}>Scrape Websites</button>
+
+
+      {loading ? (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <h2>Loading webpage...</h2>
         <h2>Can take up to 30 seconds...</h2>
       </div>
-    )
-  }
-
-  return ( // what html should fill the container
-    <>
-      <h1>Apprenticeship Tracking Site</h1>
-      <button onClick={() => 
-        axios.get('https://aprenticeship-backend.onrender.com/scrape')
-        .then(response => {
-          setJobs(response.data)
-      })}>Scrape Websites</button>
-
-
+      ) : (
       <div className='list'>
         {jobs.map((job) => ( // for each job create this div element filled with its values
           <div className='display_block'>
@@ -52,7 +51,8 @@ function App() {
 
           </div>
         ))}
-      </div>
+        </div>
+        )}
     </>
   )
 }
