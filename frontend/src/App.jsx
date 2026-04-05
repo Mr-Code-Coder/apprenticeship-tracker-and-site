@@ -34,8 +34,14 @@ function App() {
   return ( // what html should fill the container
     <>
       <h1>Apprenticeship Tracking Site</h1>
+      <button onClick={() => 
+        axios.get('https://aprenticeship-backend.onrender.com/scrape')
+        .then(response => {
+          setJobs(response.data)
+      })}>Scrape Websites</button>
 
-      <div style={{display: 'grid', gap: '20px'}}>
+
+      <div className='list'>
         {jobs.map((job) => ( // for each job create this div element filled with its values
           <div className='display_block'>
             <h4>{job.title}</h4>
